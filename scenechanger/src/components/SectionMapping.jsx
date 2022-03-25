@@ -43,6 +43,7 @@ export default function SectionMapping(props) {
             </div>
           );
         })}
+        {props.twitchRewards.length === 0 ? <div className="text-xs mt-4 text-center">No channel rewards found on Twitch...</div> : null}
       </div>
     </DashboardSection>
   );

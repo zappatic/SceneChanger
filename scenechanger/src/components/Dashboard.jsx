@@ -41,7 +41,7 @@ export default function Dashboard(props) {
       {obsConnected && twitchConnected ? (
         <Fragment>
           <SectionMapping rewardSceneMapping={rewardSceneMapping} setRewardSceneMapping={setRewardSceneMapping} twitchRewards={twitchRewards} obsScenes={obsScenes} />
-          <SectionActivate obs={obs} />
+          {twitchRewards.length > 0 ? <SectionActivate obs={obs} /> : null}
         </Fragment>
       ) : null}
 
