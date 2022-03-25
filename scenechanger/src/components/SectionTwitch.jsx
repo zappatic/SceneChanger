@@ -4,9 +4,8 @@ import { CloseIcon, RefreshIcon, TickMark, TwitchIcon } from "./SVGIcons";
 
 import DashboardSection from "./DashboardSection";
 import Button from "./Button";
-import config from "../config.json";
 import simulated_rewards from "../simulated_rewards.json";
-import SectionHeader from "./SectionHeader";
+import Title from "./Title";
 import Tooltip from "./Tooltip";
 
 export default function SectionTwitch(props) {
@@ -15,29 +14,32 @@ export default function SectionTwitch(props) {
   const [showTwitchDisconnectTooltip, setShowTwitchDisconnectTooltip] = useState(false);
   const [showTwitchRefreshTooltip, setShowTwitchRefreshTooltip] = useState(false);
 
-  const updateChannelPointRewards = (data) => {
-    const rewards = [];
-    if (data.hasOwnProperty("data")) {
-      data.data.forEach((entry) => {
-        rewards.push({ id: entry.id, title: entry.title });
-      });
-    }
-    localStorage.setItem("twitch_rewards", JSON.stringify(rewards));
-    props.setTwitchRewards(rewards);
-  };
+  const updateChannelPointRewards = useCallback(
+    (data) => {
+      const rewards = [];
+      if (data.hasOwnProperty("data")) {
+        data.data.forEach((entry) => {
+          rewards.push({ id: entry.id, title: entry.title });
+        });
+      }
+      localStorage.setItem("twitch_rewards", JSON.stringify(rewards));
+      props.setTwitchRewards(rewards);
+    },
+    [props]
+  );
 
   const fetchChannelPointRewards = useCallback(() => {
     const accessToken = localStorage.getItem("twitch_access_token");
     const twitchChannelID = localStorage.getItem("twitch_channel_id");
     if (twitchChannelID !== null) {
-      if (config.simulatetwitch) {
+      if (process.env.REACT_APP_SIMULATE_TWITCH === "true") {
         updateChannelPointRewards(simulated_rewards);
       } else {
         fetch("https://api.twitch.tv/helix/channel_points/custom_rewards?broadcaster_id=" + encodeURIComponent(twitchChannelID), {
           method: "GET",
           headers: {
             Authorization: "Bearer " + accessToken,
-            "Client-ID": config.twitchclientid,
+            "Client-ID": process.env.REACT_APP_TWITCH_CLIENT_ID,
           },
         })
           .then((result) => result.json())
@@ -46,7 +48,7 @@ export default function SectionTwitch(props) {
           });
       }
     }
-  }, []);
+  }, [updateChannelPointRewards]);
 
   const disconnectTwitch = () => {
     props.setTwitchConnected(false);
@@ -76,7 +78,7 @@ export default function SectionTwitch(props) {
           method: "GET",
           headers: {
             Authorization: "Bearer " + accessToken,
-            "Client-ID": config.twitchclientid,
+            "Client-ID": process.env.REACT_APP_TWITCH_CLIENT_ID,
           },
         })
           .then((result) => result.json())
@@ -109,11 +111,11 @@ export default function SectionTwitch(props) {
         setTwitchChannelName(localStorage.getItem("twitch_display_name"));
       }
     }
-  }, [fetchChannelPointRewards]);
+  }, [fetchChannelPointRewards, props]);
 
   return (
     <DashboardSection>
-      <SectionHeader className="flex flex-row gap-2">
+      <Title className="flex flex-row gap-2">
         <span className="grow">Step 1 - Connect to Twitch</span>
         {props.twitchConnected ? (
           <Fragment>
@@ -145,7 +147,7 @@ export default function SectionTwitch(props) {
             </div>
           </Fragment>
         ) : null}
-      </SectionHeader>
+      </Title>
       {props.twitchConnected ? (
         <div className="flex flex-row gap-2 items-center justify-center">
           <TickMark className="h-6 fill-green-600" />
@@ -159,14 +161,14 @@ export default function SectionTwitch(props) {
         </div>
       ) : (
         <Fragment>
-          <div className="text-sm italic mb-4">In order to catch the Channel Point redeem events, we'll have to connect to your Twitch channel.</div>
+          <div className="text-sm mb-4">In order to catch the Channel Point redeem events, we'll have to connect to your Twitch channel.</div>
           <div className="flex flex-row justify-center">
             <a
               href={
                 "https://id.twitch.tv/oauth2/authorize?client_id=" +
-                config.twitchclientid +
+                process.env.REACT_APP_TWITCH_CLIENT_ID +
                 "&redirect_uri=" +
-                config.twitchredirect +
+                process.env.REACT_APP_TWITCH_REDIRECT +
                 "&response_type=token&scope=channel:read:redemptions&force_verify=true&state=twitch" +
                 Date.now()
               }

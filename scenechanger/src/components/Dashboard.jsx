@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import DashboardSection from "./DashboardSection";
+import React, { Fragment, useEffect, useState } from "react";
+import SectionActivate from "./SectionActivate";
+
+import SectionHeader from "./SectionHeader";
 import SectionMapping from "./SectionMapping";
 import SectionOBS from "./SectionOBS";
 import SectionTwitch from "./SectionTwitch";
-import { DoubleArrowRight, OBSIcon, TwitchIcon } from "./SVGIcons";
 
 const OBSWebSocket = require("obs-websocket-js");
 const obs = new OBSWebSocket();
@@ -34,20 +35,23 @@ export default function Dashboard(props) {
 
   return (
     <div className="mt-4 flex flex-col gap-6 max-w-6xl mx-auto">
-      <DashboardSection className="flex flex-col gap-4">
-        <div className="text-2xl text-center">Scene Changer</div>
-        <div className="flex flex-row gap-3 justify-center items-center">
-          <TwitchIcon className="fill-twitch-0 h-7" />
-          <DoubleArrowRight className="h-8 fill-slate-500" />
-          <OBSIcon className="h-8" />
-        </div>
-        <div className="text-center">Switch OBS scenes through Twitch Channel Points redeems</div>
-      </DashboardSection>
+      <SectionHeader />
       <SectionTwitch twitchRewards={twitchRewards} setTwitchRewards={setTwitchRewards} twitchConnected={twitchConnected} setTwitchConnected={setTwitchConnected} />
       <SectionOBS obs={obs} obsScenes={obsScenes} setOBSScenes={setOBSScenes} obsConnected={obsConnected} setOBSConnected={setOBSConnected} />
       {obsConnected && twitchConnected ? (
-        <SectionMapping rewardSceneMapping={rewardSceneMapping} setRewardSceneMapping={setRewardSceneMapping} twitchRewards={twitchRewards} obsScenes={obsScenes} />
+        <Fragment>
+          <SectionMapping rewardSceneMapping={rewardSceneMapping} setRewardSceneMapping={setRewardSceneMapping} twitchRewards={twitchRewards} obsScenes={obsScenes} />
+          <SectionActivate obs={obs} />
+        </Fragment>
       ) : null}
+
+      <div className="text-center text-slate-600 text-xs">
+        created by{" "}
+        <a href="https://twitter.com/zappatic" target="_blank" rel="nofollower" className="underline">
+          zappatic
+        </a>{" "}
+        - 2022
+      </div>
     </div>
   );
 }

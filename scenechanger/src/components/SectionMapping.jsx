@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DashboardSection from "./DashboardSection";
-import SectionHeader from "./SectionHeader";
+import Title from "./Title";
 
 export default function SectionMapping(props) {
   const setSceneForReward = (reward, scene) => {
@@ -12,7 +12,7 @@ export default function SectionMapping(props) {
 
   return (
     <DashboardSection>
-      <SectionHeader>Step 3 - Link rewards to scenes</SectionHeader>
+      <Title>Step 3 - Link rewards to scenes</Title>
       <div className="mt-4 flex flex-col">
         <div className="flex flex-row gap-4  py-1 px-2 border-b border-b-slate-500">
           <div className="w-6/12 italic">Reward</div>

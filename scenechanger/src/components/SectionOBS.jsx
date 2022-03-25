@@ -1,13 +1,15 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 
 import { TickMark, OBSIcon, Spinner, RefreshIcon, CloseIcon } from "./SVGIcons";
 
 import DashboardSection from "./DashboardSection";
 import Button from "./Button";
-import SectionHeader from "./SectionHeader";
+import Title from "./Title";
 import Tooltip from "./Tooltip";
+import AlertContext from "./AlertContext";
 
 export default function SectionOBS(props) {
+  const { showAlert } = useContext(AlertContext);
   const [OBSIPAddress, setOBSIPAddress] = useState("localhost");
   const [OBSPort, setOBSPort] = useState("4444");
   const [OBSPassword, setOBSPassword] = useState("");
@@ -38,9 +40,9 @@ export default function SectionOBS(props) {
       })
       .catch((err) => {
         if (err.hasOwnProperty("description")) {
-          console.log(err.description); // TODO
+          showAlert(err.description);
         } else if (err.hasOwnProperty("error")) {
-          console.log(err.error);
+          showAlert(err.error);
         }
         console.log(err);
         setIsConnectingToOBS(false);
@@ -74,7 +76,7 @@ export default function SectionOBS(props) {
 
   return (
     <DashboardSection>
-      <SectionHeader className="flex flex-row gap-2">
+      <Title className="flex flex-row gap-2">
         <span className="grow">Step 2 - Connect to OBS</span>
         {props.obsConnected ? (
           <Fragment>
@@ -106,7 +108,7 @@ export default function SectionOBS(props) {
             </div>
           </Fragment>
         ) : null}
-      </SectionHeader>
+      </Title>
       {props.obsConnected ? (
         <div className="flex flex-row gap-2 items-center justify-center">
           <TickMark className="h-6 fill-green-600" />
@@ -118,13 +120,20 @@ export default function SectionOBS(props) {
         </div>
       ) : (
         <Fragment>
-          <div className="text-sm italic mb-4">
+          <div className="text-sm 2mb-4">
             Make sure you have the{" "}
-            <a className="underline" href="https://github.com/Palakis/obs-websocket/releases/" target="_blank">
+            <a className="underline" href="https://github.com/Palakis/obs-websocket/releases/" target="_blank" rel="noreferrer">
               obs-websocket
             </a>{" "}
             plugin installed and activated in OBS Studio.
           </div>
+
+          {OBSIPAddress !== "localhost" ? (
+            <div className="text-sm my-4">
+              If you are not running the browser on the same machine as OBS (so you'd have to enter an IP address instead of 'localhost'), make sure to load this site over http:// instead of https://
+              because the websocket connection exposed by OBS runs unsecured, and your browser will refuse to make a connection from a https:// website to an unsecured websocket.
+            </div>
+          ) : null}
 
           <div className="flex flex-col gap-2 items-center mt-3">
             <div className="flex flex-row gap-2 items-center">

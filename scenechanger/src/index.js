@@ -3,11 +3,14 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
+import { AlertProvider } from "./components/AlertContext";
 import Dashboard from "./components/Dashboard";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Dashboard />
+    <AlertProvider>
+      <Dashboard />
+    </AlertProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
