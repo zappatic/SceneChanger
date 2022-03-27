@@ -15,6 +15,7 @@ export default function Dashboard(props) {
   const [rewardSceneMapping, setRewardSceneMapping] = useState({});
   const [obsConnected, setOBSConnected] = useState(false);
   const [twitchConnected, setTwitchConnected] = useState(false);
+  const [markFulfilled, setMarkFulfilled] = useState(false);
 
   useEffect(() => {
     const r = localStorage.getItem("twitch_rewards");
@@ -31,6 +32,11 @@ export default function Dashboard(props) {
     if (m !== null) {
       setRewardSceneMapping(JSON.parse(m));
     }
+
+    const f = localStorage.getItem("mark_reward_as_fulfilled");
+    if (f !== null) {
+      setMarkFulfilled(f === "true");
+    }
   }, []);
 
   return (
@@ -40,8 +46,15 @@ export default function Dashboard(props) {
       <SectionOBS obs={obs} obsScenes={obsScenes} setOBSScenes={setOBSScenes} obsConnected={obsConnected} setOBSConnected={setOBSConnected} />
       {obsConnected && twitchConnected ? (
         <Fragment>
-          <SectionMapping rewardSceneMapping={rewardSceneMapping} setRewardSceneMapping={setRewardSceneMapping} twitchRewards={twitchRewards} obsScenes={obsScenes} />
-          {twitchRewards.length > 0 ? <SectionActivate obs={obs} /> : null}
+          <SectionMapping
+            rewardSceneMapping={rewardSceneMapping}
+            setRewardSceneMapping={setRewardSceneMapping}
+            twitchRewards={twitchRewards}
+            obsScenes={obsScenes}
+            markFulfilled={markFulfilled}
+            setMarkFulfilled={setMarkFulfilled}
+          />
+          {twitchRewards.length > 0 ? <SectionActivate obs={obs} markFulfilled={markFulfilled} /> : null}
         </Fragment>
       ) : null}
 

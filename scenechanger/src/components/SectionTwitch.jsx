@@ -169,7 +169,7 @@ export default function SectionTwitch(props) {
                 process.env.REACT_APP_TWITCH_CLIENT_ID +
                 "&redirect_uri=" +
                 process.env.REACT_APP_TWITCH_REDIRECT +
-                "&response_type=token&scope=channel:read:redemptions&force_verify=true&state=twitch" +
+                "&response_type=token&scope=channel:read:redemptions%20channel:manage:redemptions&force_verify=true&state=twitch" +
                 Date.now()
               }
             >

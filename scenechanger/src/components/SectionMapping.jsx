@@ -43,7 +43,26 @@ export default function SectionMapping(props) {
             </div>
           );
         })}
-        {props.twitchRewards.length === 0 ? <div className="text-xs mt-4 text-center">No channel rewards found on Twitch...</div> : null}
+        {props.twitchRewards.length === 0 ? (
+          <div className="text-xs mt-4 text-center">No channel rewards found on Twitch...</div>
+        ) : (
+          <div className="mt-4">
+            <input
+              type="checkbox"
+              value={"Y"}
+              id="fulfill-rewards"
+              className="mx-2"
+              checked={props.markFulfilled}
+              onChange={(e) => {
+                localStorage.setItem("mark_reward_as_fulfilled", e.target.checked);
+                props.setMarkFulfilled(e.target.checked);
+              }}
+            />
+            <label htmlFor="fulfill-rewards" className="text-sm">
+              Mark reward redeems as 'fulfilled' after changing scene (only applies to custom rewards)
+            </label>
+          </div>
+        )}
       </div>
     </DashboardSection>
   );

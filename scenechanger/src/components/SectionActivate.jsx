@@ -25,6 +25,33 @@ export default function SectionActivate(props) {
       const reward = message.data.redemption.reward.id;
       if (mapping.hasOwnProperty(reward)) {
         switchToScene(mapping[reward]);
+        if (props.markFulfilled) {
+          const accessToken = localStorage.getItem("twitch_access_token");
+          const twitchChannelID = localStorage.getItem("twitch_channel_id");
+          if (twitchChannelID !== null) {
+            fetch(
+              "https://api.twitch.tv/helix/channel_points/custom_rewards/redemptions?broadcaster_id=" +
+                encodeURIComponent(twitchChannelID) +
+                "&id=" +
+                encodeURIComponent(message.data.redemption.id) +
+                "&reward_id=" +
+                encodeURIComponent(reward),
+              {
+                method: "PATCH",
+                body: JSON.stringify({ status: "FULFILLED" }),
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer " + accessToken,
+                  "Client-ID": process.env.REACT_APP_TWITCH_CLIENT_ID,
+                },
+              }
+            )
+              .then((result) => result.json())
+              .then((json) => {
+                console.log("Marked as fulfilled");
+              });
+          }
+        }
       } else {
         console.log("No scene found for reward ID", reward);
       }
