@@ -63,11 +63,11 @@ export default function Dashboard(props) {
 
       <div className="text-center text-slate-600 text-xs">
         created by{" "}
-        <a href="https://twitter.com/zappatic" target="_blank" rel="nofollower" className="underline">
+        <a href="https://twitter.com/zappatic" target="_blank" rel="noreferrer" className="underline">
           zappatic
         </a>{" "}
         - &copy; 2022 - view on{" "}
-        <a href="https://github.com/zappatic/SceneChanger" target="_blank" rel="nofollower" className="underline">
+        <a href="https://github.com/zappatic/SceneChanger" target="_blank" rel="noreferrer" className="underline">
           github
         </a>{" "}
         - show{" "}
