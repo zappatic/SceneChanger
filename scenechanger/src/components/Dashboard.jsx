@@ -4,6 +4,7 @@ import SectionActivate from "./SectionActivate";
 import SectionHeader from "./SectionHeader";
 import SectionMapping from "./SectionMapping";
 import SectionOBS from "./SectionOBS";
+import SectionPrivacy from "./SectionPrivacy";
 import SectionTwitch from "./SectionTwitch";
 
 const OBSWebSocket = require("obs-websocket-js");
@@ -16,6 +17,7 @@ export default function Dashboard(props) {
   const [obsConnected, setOBSConnected] = useState(false);
   const [twitchConnected, setTwitchConnected] = useState(false);
   const [markFulfilled, setMarkFulfilled] = useState(false);
+  const [showPrivacyInfo, setShowPrivacyInfo] = useState(false);
 
   useEffect(() => {
     const r = localStorage.getItem("twitch_rewards");
@@ -57,13 +59,26 @@ export default function Dashboard(props) {
           {twitchRewards.length > 0 ? <SectionActivate obs={obs} markFulfilled={markFulfilled} /> : null}
         </Fragment>
       ) : null}
+      <SectionPrivacy show={showPrivacyInfo} setShow={setShowPrivacyInfo}></SectionPrivacy>
 
       <div className="text-center text-slate-600 text-xs">
         created by{" "}
         <a href="https://twitter.com/zappatic" target="_blank" rel="nofollower" className="underline">
           zappatic
         </a>{" "}
-        - 2022
+        - &copy; 2022 - view on{" "}
+        <a href="https://github.com/zappatic/SceneChanger" target="_blank" rel="nofollower" className="underline">
+          github
+        </a>{" "}
+        - show{" "}
+        <span
+          onClick={() => {
+            setShowPrivacyInfo(true);
+          }}
+          className="underline cursor-pointer"
+        >
+          privacy info
+        </span>
       </div>
     </div>
   );
